@@ -1,14 +1,15 @@
-import { Categories, Category } from "../model/categories";
+import { User, Users } from "../model/users";
 import { Application, Request, RequestHandler, Response } from "express";
+import verifyAuthToken from "../tokenMiddleWare";
 
-const categories = new Categories();
+const users = new Users();
 
 const routeAction = (action: string): RequestHandler => {
   switch (action) {
     case "index":
       return async (req: Request, res: Response) => {
         try {
-          const data = await categories.index();
+          const data = await users.index();
           res.json(data);
         } catch (error) {
           console.log(error);
@@ -24,7 +25,7 @@ const routeAction = (action: string): RequestHandler => {
     case "show":
       return async (req: Request, res: Response) => {
         try {
-          const data = await categories.show(parseInt(req.params.id));
+          const data = await users.show(parseInt(req.params.id));
           res.json(data);
         } catch (error) {
           console.log(error);
@@ -40,7 +41,22 @@ const routeAction = (action: string): RequestHandler => {
     case "create":
       return async (req: Request, res: Response) => {
         try {
-          const data = await categories.create(req.body);
+          const data = await users.create(req.body);
+          res.json(data);
+        } catch (error) {
+          console.log(error);
+          res.status(401);
+          if (error instanceof Error) {
+            res.send(error.message);
+          } else {
+            res.send(error);
+          }
+        }
+      };
+    case "login":
+      return async (req: Request, res: Response) => {
+        try {
+          const data = await users.login(req.body);
           res.json(data);
         } catch (error) {
           console.log(error);
@@ -56,10 +72,11 @@ const routeAction = (action: string): RequestHandler => {
   throw new Error(`action ${action} doesn't implemented`);
 };
 
-const categoryRoute = (app: Application) => {
-  app.get("/categories", routeAction("index"));
-  app.get("/categories/:id", routeAction("show"));
-  app.post("/categories", routeAction("create"));
+const usersRoute = (app: Application) => {
+  app.get("/users", verifyAuthToken, routeAction("index"));
+  app.get("/users/:id", verifyAuthToken, routeAction("show"));
+  app.post("/users", verifyAuthToken, routeAction("create"));
+  app.post("/users/login", routeAction("login"));
 };
 
-export default categoryRoute;
+export default usersRoute;

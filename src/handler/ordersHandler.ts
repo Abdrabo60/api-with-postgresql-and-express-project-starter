@@ -1,14 +1,17 @@
-import { Categories, Category } from "../model/categories";
+import { Orders } from "../model/orders";
 import { Application, Request, RequestHandler, Response } from "express";
+import verifyAuthToken from "../tokenMiddleWare";
 
-const categories = new Categories();
+const orders = new Orders();
 
 const routeAction = (action: string): RequestHandler => {
   switch (action) {
-    case "index":
+    case "completedOrders":
       return async (req: Request, res: Response) => {
         try {
-          const data = await categories.index();
+          const data = await orders.completedOrders(
+            parseInt(req.params.user_id)
+          );
           res.json(data);
         } catch (error) {
           console.log(error);
@@ -21,26 +24,10 @@ const routeAction = (action: string): RequestHandler => {
         }
       };
 
-    case "show":
+    case "currentOrders":
       return async (req: Request, res: Response) => {
         try {
-          const data = await categories.show(parseInt(req.params.id));
-          res.json(data);
-        } catch (error) {
-          console.log(error);
-          res.status(401);
-          if (error instanceof Error) {
-            res.send(error.message);
-          } else {
-            res.send(error);
-          }
-        }
-      };
-
-    case "create":
-      return async (req: Request, res: Response) => {
-        try {
-          const data = await categories.create(req.body);
+          const data = await orders.currentOrders(parseInt(req.params.user_id));
           res.json(data);
         } catch (error) {
           console.log(error);
@@ -56,10 +43,17 @@ const routeAction = (action: string): RequestHandler => {
   throw new Error(`action ${action} doesn't implemented`);
 };
 
-const categoryRoute = (app: Application) => {
-  app.get("/categories", routeAction("index"));
-  app.get("/categories/:id", routeAction("show"));
-  app.post("/categories", routeAction("create"));
+const ordersRoute = (app: Application) => {
+  app.get(
+    "/orders/completed/:user_id",
+    verifyAuthToken,
+    routeAction("completedOrders")
+  );
+  app.get(
+    "/orders/current/:user_id",
+    verifyAuthToken,
+    routeAction("currentOrders")
+  );
 };
 
-export default categoryRoute;
+export default ordersRoute;

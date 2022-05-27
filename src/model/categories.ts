@@ -1,5 +1,5 @@
 import client from "../database";
-
+import jwt from "jsonwebtoken";
 export type Category = {
   id: number;
   name: string;
@@ -29,17 +29,22 @@ export class Categories {
        ${erro}`);
     }
   }
-  async create(name: string): Promise<Category> {
+  async create(cat: Category): Promise<Category | null> {
     try {
-      const con = await client.connect();
-      const sql = `INSERT INTO categories (name) VALUES ('${name}');`;
-      const result = await con.query(sql);
-      con.release();
+      
 
+      if (cat.name == null || cat.name === "") {
+        throw "name value is null or empty";
+      }
+      const con = await client.connect();
+      const sql = `INSERT INTO categories (name) VALUES ($1) returning *;`;
+      const result = await con.query(sql, [cat.name]);
+      con.release();
       return result.rows[0];
     } catch (erro) {
-      throw new Error(`error while create category
-       ${erro}`);
+      console.log(`error while create category 
+      ${erro}`);
+      return null;
     }
   }
 }
