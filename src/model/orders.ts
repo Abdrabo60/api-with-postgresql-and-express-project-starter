@@ -8,8 +8,6 @@ const { BCRYPT_PASSWORD, SALT_ROUNDS, JWT_SECRET } = process.env;
 
 export type Order = {
   id: number;
-  product_id: number;
-  quantity: number;
   user_id: number;
   status: boolean;
 };
@@ -20,7 +18,9 @@ export class Orders {
         throw "user id in null or 0";
       }
       const con = await client.connect();
-      const sql = "SELECT * FROM Orders where user_id=$1 and status=false;";
+      const sql = `SELECT o.id,o.status,op.product_id,op.quantity FROM Orders as o
+       inner join order_products as op on (o.id=op.order_id)
+        where o.user_id=$1 and o.status=false;`;
       const result = await con.query(sql, [user_id]);
       con.release();
       return result.rows;
@@ -33,7 +33,9 @@ export class Orders {
   async completedOrders(user_id: number): Promise<Order> {
     try {
       const con = await client.connect();
-      const sql = `SELECT * FROM Orders where user_id=$1 and status ;`;
+      const sql = `SELECT o.id,o.status,op.product_id,op.quantity FROM Orders as o
+       inner join order_products as op on (o.id=op.order_id)
+        where o.user_id=$1 and o.status;`;
       const result = await con.query(sql, [user_id]);
       con.release();
       return result.rows[0];

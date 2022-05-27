@@ -52,7 +52,7 @@ npm install
   - /users => arary of users.**[token required]**
   - /users/:id => user of id.**[token required]**
 - Post method.
-  - /users => takes user object => returns token.**[token required]**
+  - /users => takes user object to create => returns token.
   - /users/login => takes user object => returns token .
 
 ## Categories

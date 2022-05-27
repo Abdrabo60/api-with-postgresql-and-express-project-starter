@@ -75,7 +75,7 @@ const routeAction = (action: string): RequestHandler => {
 const usersRoute = (app: Application) => {
   app.get("/users", verifyAuthToken, routeAction("index"));
   app.get("/users/:id", verifyAuthToken, routeAction("show"));
-  app.post("/users", verifyAuthToken, routeAction("create"));
+  app.post("/users", routeAction("create"));
   app.post("/users/login", routeAction("login"));
 };
 
