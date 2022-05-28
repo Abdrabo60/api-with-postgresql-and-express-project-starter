@@ -43,11 +43,12 @@ const routeAction = (action: string): RequestHandler => {
           const data = await categories.create(req.body);
           res.json(data);
         } catch (error) {
-          console.log(error);
           res.status(401);
           if (error instanceof Error) {
+            console.log(error.message);
             res.send(error.message);
           } else {
+            console.log(error);
             res.send(error);
           }
         }

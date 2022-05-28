@@ -27,24 +27,34 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## Data Shapes
 
-#### Product
+#### Categories
 
-- id
-- name
-- price
-- [OPTIONAL] category
+- id:integer
+- name:varchar(50)
 
-#### User
+#### Products
 
-- id
-- firstName
-- lastName
-- password
+- id:integer
+- name:varchar(50)
+- price:double
+- category_id:integer
+
+#### Users
+
+- id:integer
+- firstName:varchar(50)
+- lastName:varchar(50)
+- password:text
 
 #### Orders
 
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+- id:integer
+- user_id:integer
+- status:boolean
+
+#### Order_Products
+
+- id:integer
+- order_id:integer
+- product_id:integer
+- quantity:integer

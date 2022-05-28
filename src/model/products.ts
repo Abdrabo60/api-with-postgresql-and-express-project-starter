@@ -21,8 +21,8 @@ export class Products {
       con.release();
       return result.rows;
     } catch (error) {
-      throw new Error(`error while fetching products 
-      ${error}`);
+      throw `error while fetching products 
+      ${error}`;
     }
   }
   async show(id: number): Promise<Product> {
@@ -33,8 +33,8 @@ export class Products {
       con.release();
       return result.rows[0];
     } catch (erro) {
-      throw new Error(`error while fetch product:${id}
-       ${erro}`);
+      throw `error while fetch product:${id}
+       ${erro}`;
     }
   }
   async byCategory(category_id: number): Promise<Product> {
@@ -45,8 +45,8 @@ export class Products {
       con.release();
       return result.rows[0];
     } catch (erro) {
-      throw new Error(`error while fetch product by category:${category_id}
-       ${erro}`);
+      throw `error while fetch product by category:${category_id}
+       ${erro}`;
     }
   }
   async create(p: Product): Promise<string | null> {
@@ -61,9 +61,8 @@ export class Products {
       con.release();
       return result.rows[0];
     } catch (erro) {
-      console.log(`error while create product
-       ${erro}`);
-      return null;
+      throw `error while create product
+       ${erro}`;
     }
   }
 }

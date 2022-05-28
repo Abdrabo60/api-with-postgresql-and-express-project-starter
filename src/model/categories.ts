@@ -1,9 +1,9 @@
 import client from "../database";
-import jwt from "jsonwebtoken";
-export type Category = {
-  id: number;
-  name: string;
-};
+
+export class Category {
+  id?: number;
+  name?: string;
+}
 export class Categories {
   async index(): Promise<Category[]> {
     try {
@@ -13,8 +13,8 @@ export class Categories {
       con.release();
       return result.rows;
     } catch (error) {
-      throw new Error(`error while fetching categories 
-      ${error}`);
+      throw `error while fetching categories 
+      ${error}`;
     }
   }
   async show(id: number): Promise<Category> {
@@ -25,14 +25,12 @@ export class Categories {
       con.release();
       return result.rows[0];
     } catch (erro) {
-      throw new Error(`error while fetch category:${id}
-       ${erro}`);
+      throw `error while fetch category:${id}
+       ${erro}`;
     }
   }
   async create(cat: Category): Promise<Category | null> {
     try {
-      
-
       if (cat.name == null || cat.name === "") {
         throw "name value is null or empty";
       }
@@ -42,9 +40,8 @@ export class Categories {
       con.release();
       return result.rows[0];
     } catch (erro) {
-      console.log(`error while create category 
-      ${erro}`);
-      return null;
+      throw `error while create category 
+      ${erro}`;
     }
   }
 }
