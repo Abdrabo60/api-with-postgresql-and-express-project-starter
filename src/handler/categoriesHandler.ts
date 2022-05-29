@@ -1,60 +1,30 @@
-import { Categories, Category } from "../model/categories";
+import { Categories } from "../model/categories";
 import { Application, Request, RequestHandler, Response } from "express";
 
 const categories = new Categories();
 
 const routeAction = (action: string): RequestHandler => {
-  switch (action) {
-    case "index":
-      return async (req: Request, res: Response) => {
-        try {
-          const data = await categories.index();
-          res.json(data);
-        } catch (error) {
-          console.log(error);
-          res.status(401);
-          if (error instanceof Error) {
-            res.send(error.message);
-          } else {
-            res.send(error);
-          }
-        }
-      };
-
-    case "show":
-      return async (req: Request, res: Response) => {
-        try {
-          const data = await categories.show(parseInt(req.params.id));
-          res.json(data);
-        } catch (error) {
-          console.log(error);
-          res.status(401);
-          if (error instanceof Error) {
-            res.send(error.message);
-          } else {
-            res.send(error);
-          }
-        }
-      };
-
-    case "create":
-      return async (req: Request, res: Response) => {
-        try {
-          const data = await categories.create(req.body);
-          res.json(data);
-        } catch (error) {
-          res.status(401);
-          if (error instanceof Error) {
-            console.log(error.message);
-            res.send(error.message);
-          } else {
-            console.log(error);
-            res.send(error);
-          }
-        }
-      };
-  }
-  throw new Error(`action ${action} doesn't implemented`);
+  return async (req: Request, res: Response) => {
+    let data;
+    try {
+      switch (action) {
+        case "index":
+          data = await categories.index();
+          break;
+        case "show":
+          data = await categories.show(parseInt(req.params.id));
+          break;
+        case "create":
+          data = await categories.create(req.body);
+          break;
+      }
+      res.send(data);
+    } catch (error) {
+      console.log(error);
+      res.status(401);
+      res.send(error);
+    }
+  };
 };
 
 const categoryRoute = (app: Application) => {

@@ -7,7 +7,7 @@ dotenv.config();
 const { BCRYPT_PASSWORD, SALT_ROUNDS, JWT_SECRET } = process.env;
 
 export type User = {
-  id: number;
+  id?: number;
   first_name: string;
   last_name: string;
   password: string;

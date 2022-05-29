@@ -7,7 +7,7 @@ dotenv.config();
 const { BCRYPT_PASSWORD, SALT_ROUNDS, JWT_SECRET } = process.env;
 
 export type Product = {
-  id: number;
+  id?: number;
   name: string;
   price: number;
   category_id: number;
